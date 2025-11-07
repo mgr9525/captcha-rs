@@ -18,13 +18,13 @@
 //! let base_img = captcha.to_base64();
 //! println!("base_img: {}", base_img);
 //! ```
-use image::DynamicImage;
+use image::{DynamicImage, ImageResult};
 use imageproc::noise::{gaussian_noise_mut, salt_and_pepper_noise_mut};
 use rand::Rng;
 
 use crate::captcha::{
     cyclic_write_character, draw_interference_ellipse, draw_interference_line, get_image,
-    to_base64_str,
+    to_base64_str, to_jpeg_bytes,
 };
 
 mod captcha;
@@ -39,6 +39,9 @@ pub struct Captcha {
 impl Captcha {
     pub fn to_base64(&self) -> String {
         to_base64_str(&self.image, self.compression)
+    }
+    pub fn jpeg_bytes(&self) -> ImageResult<Vec<u8>> {
+        to_jpeg_bytes(&self.image, self.compression)
     }
 }
 

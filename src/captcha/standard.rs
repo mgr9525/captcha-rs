@@ -1,7 +1,7 @@
 use base64::engine::general_purpose;
 use base64::Engine;
-use image::DynamicImage;
 use image::ImageOutputFormat::Jpeg;
+use image::{DynamicImage, ImageResult};
 use image::{ImageBuffer, Rgb};
 use imageproc::drawing::{draw_cubic_bezier_curve_mut, draw_hollow_ellipse_mut, draw_text_mut};
 use rand::{thread_rng, Rng};
@@ -196,4 +196,9 @@ pub fn to_base64_str(image: &DynamicImage, compression: u8) -> String {
     image.write_to(&mut buf, Jpeg(compression)).unwrap();
     let res_base64 = general_purpose::STANDARD.encode(buf.into_inner());
     format!("data:image/jpeg;base64,{}", res_base64)
+}
+pub fn to_jpeg_bytes(image: &DynamicImage, compression: u8) -> ImageResult<Vec<u8>> {
+    let mut buf = Cursor::new(Vec::new());
+    image.write_to(&mut buf, Jpeg(compression))?;
+    Ok(buf.into_inner())
 }
